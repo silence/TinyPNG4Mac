@@ -34,7 +34,7 @@ class MainViewController: NSViewController, NSOpenSavePanelDelegate, NSTableView
 		
 		if let savedKey = TPConfig.savedkey() {
 			apiKey.stringValue = savedKey
-			TPClient.sApiKey = savedKey
+			TPClient.sApiKey   = savedKey
 			keySaved = true
 		}
 		if let savedPath = TPConfig.savedPath() {

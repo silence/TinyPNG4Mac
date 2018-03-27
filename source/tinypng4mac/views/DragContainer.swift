@@ -66,8 +66,8 @@ class DragContainer: NSView {
             let manager = FileManager.default
             
 			for path in board {
-				let url = URL(fileURLWithPath: path as! String)
-                
+                let url = URL(fileURLWithPath: path as! String)
+
                 if self.isFolder(path as! String) {
                     //查找目录下所有的资源文件
 //                    let directorys = try? manager.contentsOfDirectory(atPath: path as! String)
@@ -105,7 +105,8 @@ class DragContainer: NSView {
         var isFolder:ObjCBool = false;
         
         let manager = FileManager.default
-        return manager.fileExists(atPath: path, isDirectory:&isFolder);
+        manager.fileExists(atPath: path, isDirectory:&isFolder);
+        return isFolder.boolValue
     }
 	
 	func checkExtension(_ draggingInfo: NSDraggingInfo) -> Bool {

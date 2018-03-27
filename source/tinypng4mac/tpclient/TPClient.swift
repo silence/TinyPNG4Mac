@@ -19,7 +19,12 @@ class TPClient {
 	let BASE_URL = "https://api.tinify.com/shrink"
 	
 	static let sharedClient = TPClient()
-	static var sApiKey = ""
+    static var sApiKeys = [String]()
+    static var sApiKey  = "" {
+        didSet {
+            sApiKeys = sApiKey.components(separatedBy: ",")
+        }
+    }
 	static var sOutputPath = "" {
 		didSet {
 			IOHeler.sOutputPath = sOutputPath
@@ -34,6 +39,8 @@ class TPClient {
 	let lock: NSLock = NSLock()
 	var runningTasks = 0
 	var finishTasksCount = 0
+    var taskIndex = 0
+    
 	
 	func add(_ tasks: [TPTaskInfo]) {
 		TPStore.sharedStore.add(tasks);
@@ -66,7 +73,17 @@ class TPClient {
 			let fileHandler = try FileHandle(forReadingFrom:task.originFile as URL)
 			imageData = fileHandler.readDataToEndOfFile()
 			
-			let auth = "api:\(TPClient.sApiKey)"
+            var auth = ""
+            if TPClient.sApiKeys.count != 0 {
+                let key = TPClient.sApiKeys[taskIndex]
+                auth = "api:\(key)"
+                
+                taskIndex += 1
+                if taskIndex >= TPClient.sApiKeys.count {
+                    taskIndex = 0
+                }
+            }
+            
 			let authData = auth.data(using: String.Encoding.utf8)?.base64EncodedString(options: NSData.Base64EncodingOptions.lineLength64Characters)
 			let authorizationHeader = "Basic " + authData!
 			
