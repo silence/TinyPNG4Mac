@@ -62,9 +62,9 @@ class MainViewController: NSViewController, NSOpenSavePanelDelegate, NSTableView
 	
 	override func viewDidAppear() {
 		super.viewDidAppear()
-		if TPClient.sApiKey.characters.count == 0 || TPClient.sOutputPath.characters.count == 0 {
+		if TPClient.sApiKey.count == 0 || TPClient.sOutputPath.count == 0 {
 			changePanel(true, animated: false)
-			if TPClient.sApiKey.characters.count == 0 {
+			if TPClient.sApiKey.count == 0 {
 				self.showInputPanel()
 			}
 		} else {
