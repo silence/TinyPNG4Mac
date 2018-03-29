@@ -1,5 +1,13 @@
 # TinyPNG4Mac
 
+感谢keyleduo的贡献与分享！！！
+
+改动点：
+
+1.支持目录检查
+
+2.多个api key循环使用
+
 ![preview](./preview/preview.png)
 
 This is a client of [TinyPNG](https://tinypng.com) for Mac, with which you can compress pngs without open browser and manually download images, all you need to do is just drag and drop.
