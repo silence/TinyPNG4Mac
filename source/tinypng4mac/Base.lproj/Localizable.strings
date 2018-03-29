@@ -29,3 +29,4 @@
 "Downloading" = "Downloading";
 "Finish" = "Finish";
 "ERROR" = "ERROR";
+"Credentials" = "credentials fail, wait retry";

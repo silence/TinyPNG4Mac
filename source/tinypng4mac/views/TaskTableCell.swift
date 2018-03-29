@@ -49,6 +49,8 @@ class TaskTableCell: NSTableCellView {
 					progress = 6
 				case .error:
 					statusText = NSLocalizedString("ERROR", comment: "ERROR")
+                case .credentials:
+                    statusText = NSLocalizedString("Credentials", comment: "Credentials")
 			}
 			
 			if taskStatus == .finish {
@@ -58,14 +60,15 @@ class TaskTableCell: NSTableCellView {
 				self.name.textColor = NSColor(deviceRed:1, green:1, blue:1, alpha:0.9)
 				self.name.font = NSFont.systemFont(ofSize: 14)
 				self.finishIndicator.isHidden = false
-			} else if taskStatus == .error {
+			} else if taskStatus == .error || taskStatus == .credentials {
 				debugPrint(task?.errorMessage as Any)
 				self.status.stringValue = statusText
 				self.status.textColor = NSColor(deviceRed:0.99, green:0.44, blue:0.44, alpha:1.00)
 				self.name.textColor = NSColor(deviceRed:0.87, green:0.87, blue:0.87, alpha:1)
 				self.name.font = NSFont.systemFont(ofSize: 14)
 				self.finishIndicator.isHidden = true
-			} else {
+            }
+            else {
 				self.status.stringValue = statusText
 				self.status.textColor = NSColor(deviceRed:1, green:1, blue:1, alpha:0.6)
 				self.name.textColor = NSColor.white

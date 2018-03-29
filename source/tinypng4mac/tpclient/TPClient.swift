@@ -75,13 +75,8 @@ class TPClient {
 			
             var auth = ""
             if TPClient.sApiKeys.count != 0 {
-                let key = TPClient.sApiKeys[taskIndex]
+                let key = TPClient.sApiKeys[0]
                 auth = "api:\(key)"
-                
-                taskIndex += 1
-                if taskIndex >= TPClient.sApiKeys.count {
-                    taskIndex = 0
-                }
             }
             
 			let authData = auth.data(using: String.Encoding.utf8)?.base64EncodedString(options: NSData.Base64EncodingOptions.lineLength64Characters)
@@ -109,7 +104,35 @@ class TPClient {
 						if json != JSON.null {
 							if let error = json["error"].string {
 								debugPrint("error: " + task.fileName + error)
-								self.markError(task, errorMessage: json["message"].string)
+                                
+                                //这里想处理monthly limit
+                                if ((json["message"].string?.rangeOfCharacter(from: CharacterSet.init(charactersIn: "limit"))) != nil) {
+                                    
+                                    let rs = auth.substring(from: auth.index(auth.startIndex, offsetBy: 4));
+                                    
+                                    if auth.count > 0 {
+                                        
+                                        let index = TPClient.sApiKeys.index(of: rs)
+                                        if index != nil {
+                                            TPClient.sApiKeys.remove(at: index!)
+                                        }
+                                    }
+                                    
+                                    if TPClient.sApiKeys.count > 0 {
+                                        self.credentialsError(task, errorMessage: "api key(\(rs) invalid")
+                                        
+                                        self.checkExecution()
+                                    }
+                                    else
+                                    {
+                                        self.markError(task, errorMessage: json["message"].string)
+                                    }
+                                }
+                                else
+                                {
+                                    self.markError(task, errorMessage: json["message"].string)
+                                }
+                                
 								return
 							}
 							let output = json["output"]
@@ -169,6 +192,11 @@ class TPClient {
 				self.checkExecution()
 			}
 	}
+    
+    fileprivate func credentialsError(_ task: TPTaskInfo, errorMessage: String?) {
+        task.errorMessage = errorMessage
+        updateStatus(task, newStatus: .credentials)
+    }
 	
 	fileprivate func markError(_ task: TPTaskInfo, errorMessage: String?) {
 		task.errorMessage = errorMessage
@@ -178,7 +206,7 @@ class TPClient {
 	fileprivate func updateStatus(_ task: TPTaskInfo, newStatus: TPTaskStatus, progress: Progress) {
 		task.status = newStatus
 		task.progress = progress
-		if newStatus == .error || newStatus == .finish {
+		if newStatus == .error || newStatus == .finish || newStatus == .credentials {
 			self.runningTasks -= 1
 			if newStatus == .finish {
 				self.finishTasksCount += 1

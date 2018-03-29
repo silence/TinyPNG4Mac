@@ -134,6 +134,10 @@ class MainViewController: NSViewController, NSOpenSavePanelDelegate, NSTableView
 				unlockUI()
 			}
 		}
+        else if task.status == .credentials {
+            //认证失败的会重新添加到队列中
+            TPClient.sharedClient.queue.enqueue(task)
+        }
 		
 		TPStore.sharedStore.sort()
 		taskTableView.reloadData()

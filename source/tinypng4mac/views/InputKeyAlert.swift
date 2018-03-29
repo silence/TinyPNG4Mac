@@ -22,6 +22,7 @@ class InputKeyAlert: NSAlert, NSTextFieldDelegate {
 		let view = NSView.init(frame: CGRect(x: 0, y: 0, width: 300, height: 54))
 		self.input = NSTextField.init(frame: CGRect(x: 0, y: 30, width: 300, height: 24))
 		self.input?.delegate = self
+        self.input?.placeholderString = "多个API Key请使用,分开"
 		view.addSubview(self.input!)
 		let button = self.createRegisterButton()
 		view.addSubview(button)
