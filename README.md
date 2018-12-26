@@ -6,7 +6,9 @@
 
 1.支持目录检查
 
-2.多个api key循环使用
+2.支持拖拽目录
+
+3.多个api key循环使用
 
 ![preview](./preview/preview.png)
 
